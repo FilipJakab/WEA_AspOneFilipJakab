@@ -1,0 +1,1 @@
+﻿Scaffold-DbContext -Connection "server=ftp.keenmate.com\express2016;Initial catalog=Filip_WEAAspOneFilipJakab;Persist Security Info=True;User ID=filip.jakab;Password=Filip Jakabee da King" -Provider Microsoft.EntityFrameworkCore.SqlServer -Project DataProviders -OutputDir .\Models -Force
