@@ -14,7 +14,7 @@ namespace WEA_AspOneFilipJakab.Models
 
 		public DateTime Date { get; set; }
 
-		public List<Tag> Tags { get; set; }
+		public List<int> TagIds { get; set; }
 
 		public long? Longitude { get; set; }
 

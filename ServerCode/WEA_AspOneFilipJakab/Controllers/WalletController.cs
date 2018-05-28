@@ -14,7 +14,7 @@ namespace WEA_AspOneFilipJakab.Controllers
 	[Authorize]
 	public class WalletController : Controller
 	{
-		private readonly Filip_WEAAspOneFilipJakabContext ctx;
+		//private readonly Filip_WEAAspOneFilipJakabContext ctx;
 		private readonly DbProvider dbProvider;
 
 		public WalletController(Filip_WEAAspOneFilipJakabContext ctx)
@@ -23,16 +23,16 @@ namespace WEA_AspOneFilipJakab.Controllers
 			dbProvider = new DbProvider(ctx);
 		}
 
-		/// <summary>
-		/// Get UserInfo with his Labels
-		/// </summary>
-		/// <param name="userId"></param>
-		/// <returns></returns>
-		[HttpGet]
-		public JsonResult Get(int userId)
-		{
-			throw new NotImplementedException();
-		}
+		///// <summary>
+		///// Get UserInfo with his Labels
+		///// </summary>
+		///// <param name="userId"></param>
+		///// <returns></returns>
+		//[HttpGet]
+		//public JsonResult Get(int userId)
+		//{
+		//	throw new NotImplementedException();
+		//}
 
 		[HttpPost]
 		public JsonResult Post([FromBody] TransactionModel model)
@@ -40,24 +40,19 @@ namespace WEA_AspOneFilipJakab.Controllers
 			Mapper mapper = new Mapper();
 
 			Transaction transaction = mapper.ParseTransaction(model);
-			
-			transaction.TransactionTags = new List<TransactionTags>();
 
-			model.Tags.ForEach(tag =>
+			transaction.TransactionTags = model.TagIds.Select(tagId => new TransactionTags
 			{
-				transaction.TransactionTags.Add(new TransactionTags
-				{
-					TagId = tag.TagId,
-					TransactionCode = transaction.TransactionCode
-				});
-			});
+				TagId = tagId,
+				TransactionCode = transaction.TransactionCode
+			}).ToList();
 
-			// handle transaction
 			dbProvider.AddTransaction(transaction);
 
 			throw new NotImplementedException();
 		}
 
+		// Update
 		[HttpPut]
 		public JsonResult Put([FromBody] TransactionModel model)
 		{
