@@ -48,6 +48,11 @@ namespace WEA_AspOneFilipJakab.Providers
 			return ctx.Transaction.Where(x => x.UserId == userId).ToList();
 		}
 
+		public List<TransactionCategory> GetCategories()
+		{
+			return ctx.TransactionCategory.ToList();
+		}
+
 		public void AddUser(User user)
 		{
 			ctx.User.Add(user);
@@ -58,6 +63,11 @@ namespace WEA_AspOneFilipJakab.Providers
 		public User GetUser(int userId)
 		{
 			return ctx.User.FirstOrDefault(x => x.UserId == userId);
+		}
+
+		public User GetUserByEmail(string email)
+		{
+			return ctx.User.FirstOrDefault(x => x.Email == email);
 		}
 	}
 }

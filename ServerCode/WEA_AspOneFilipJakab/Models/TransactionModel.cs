@@ -16,9 +16,9 @@ namespace WEA_AspOneFilipJakab.Models
 
 		public List<int> TagIds { get; set; }
 
-		public long? Longitude { get; set; }
+		public decimal? Longitude { get; set; }
 
-		public long? Latitude { get; set; }
+		public decimal? Latitude { get; set; }
 
 		public int? CategoryId { get; set; }
 	}

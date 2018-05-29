@@ -1,8 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
 using System.Text;
+using System.Threading;
 using DataProviders;
 using DataProviders.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Cors.Infrastructure;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using WEA_AspOneFilipJakab.Models;
@@ -13,6 +20,7 @@ using WEA_AspOneFilipJakab.Providers;
 namespace WEA_AspOneFilipJakab.Controllers
 {
 	[Route("auth")]
+	[EnableCors("AllowAnyImigrant")]
 	[AllowAnonymous]
 	public class LoginController : Controller
 	{
@@ -36,6 +44,9 @@ namespace WEA_AspOneFilipJakab.Controllers
 
 				DbProvider provider = new DbProvider(ctx);
 
+				if (provider.GetUserByEmail(mappedUser.Email) != null)
+					throw new ArgumentOutOfRangeException(nameof(model.Email), "Email already exists");
+
 				provider.AddUser(mappedUser);
 			});
 		}
@@ -56,7 +67,15 @@ namespace WEA_AspOneFilipJakab.Controllers
 					options["audience"],
 					new TimeSpan(tokenLifeTime, 0, 0));
 
-				return authProvider.Authenticate(model.Email, model.Password);
+				Tuple<User, string> userAndToken = authProvider.Authenticate(model.Email, model.Password);
+
+				Mapper mapper = new Mapper();
+
+				return new AuthenticatedUserModel
+				{
+					Token = userAndToken.Item2,
+					User = mapper.MapUser(userAndToken.Item1)
+				};
 			});
 		}
 

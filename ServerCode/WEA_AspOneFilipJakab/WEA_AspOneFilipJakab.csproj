@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\..\Workbench\WEA_AspOneFilipJakab\DataProviders\DataProviders.csproj" />
+    <ProjectReference Include="..\DataProviders\DataProviders.csproj" />
   </ItemGroup>
 
 </Project>

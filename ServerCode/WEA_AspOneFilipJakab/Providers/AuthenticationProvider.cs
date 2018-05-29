@@ -34,7 +34,7 @@ namespace WEA_AspOneFilipJakab.Providers
 		/// <param name="email"></param>
 		/// <param name="password"></param>
 		/// <returns>JWT token</returns>
-		public string Authenticate(string email, string password)
+		public Tuple<User, string> Authenticate(string email, string password)
 		{
 			User user = ctx
 				.User.FirstOrDefault(x => string.Equals(x.Email, email, StringComparison.InvariantCultureIgnoreCase) && x.Password == password);
@@ -46,6 +46,7 @@ namespace WEA_AspOneFilipJakab.Providers
 
 			List<Claim> claims = new List<Claim>
 			{
+				new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
 				new Claim(ClaimTypes.Email, user.Email),
 				new Claim(ClaimTypes.DateOfBirth, user.Birthdate.ToString(CultureInfo.CurrentCulture)),
 				new Claim(ClaimTypes.Name, $"{user.FirstName} {user.LastName}")
@@ -59,7 +60,7 @@ namespace WEA_AspOneFilipJakab.Providers
 				audience: audience,
 				signingCredentials: new SigningCredentials(issuerKey, SecurityAlgorithms.HmacSha256));
 
-			return new JwtSecurityTokenHandler().WriteToken(token);
+			return new Tuple<User, string>(user, new JwtSecurityTokenHandler().WriteToken(token));
 		}
 	}
 }
