@@ -15,7 +15,7 @@ using WEA_AspOneFilipJakab.Providers;
 
 namespace WEA_AspOneFilipJakab.Controllers
 {
-	[Authorize]
+	[Authorize()]
 	[Route("wallet")]
 	[EnableCors("AllowAnyImigrant")]
 	public class WalletController : Controller
@@ -49,12 +49,12 @@ namespace WEA_AspOneFilipJakab.Controllers
 
 				List<TagModel> tags = dbProvider
 					.GetTags(userId)
-					.Select(x => mapper.MapTag(x))
+					.Select(mapper.MapTag)
 					.ToList();
 
 				List<TransactionModel> transactions = dbProvider
 					.GetTransactions(userId)
-					.Select(x => mapper.MapTransaction(x))
+					.Select(x => mapper.MapTransaction(x, tags.Where(y => y.UserId == userId)))
 					.ToList();
 
 				List<TransactionCategoryModel> categories = dbProvider
@@ -75,13 +75,15 @@ namespace WEA_AspOneFilipJakab.Controllers
 		[HttpPost]
 		public JsonResult Post([FromBody] TransactionModel model)
 		{
-			return RequestHandlers.Handle(() => processOneTransaction(model));
+			Mapper mapper = new Mapper();
+			return RequestHandlers.Handle(() => processOneTransaction(model, mapper));
 		}
 
 		[HttpPost("transactions")]
 		public JsonResult Transactions([FromBody] List<TransactionModel> transactions)
 		{
-			return RequestHandlers.Handle(() => transactions.ForEach(processOneTransaction));
+			Mapper mapper = new Mapper();
+			return RequestHandlers.Handle(() => transactions.ForEach(x => processOneTransaction(x, mapper)));
 		}
 
 		// Update
@@ -97,16 +99,20 @@ namespace WEA_AspOneFilipJakab.Controllers
 			throw new NotImplementedException();
 		}
 
-		private void processOneTransaction(TransactionModel transaction)
+		private void processOneTransaction(TransactionModel transaction, Mapper mapper)
 		{
-			Mapper mapper = new Mapper();
-
 			Transaction parsedTransaction = mapper.ParseTransaction(transaction);
 
-			parsedTransaction.TransactionTags = transaction.TagIds.Select(tagId => new TransactionTags
+			List<Tag> newTags = transaction.TagModels.Where(x => x.TagId == 0).Select(mapper.ParseTag).ToList();
+
+			dbProvider.AddTags(newTags);
+
+			newTags.AddRange(transaction.TagModels.Where(x => x.TagId != 0).Select(mapper.ParseTag));
+
+			parsedTransaction.TransactionTags = newTags.Select(tag => new TransactionTags
 			{
-				TagId = tagId,
-				TransactionCode = parsedTransaction.TransactionCode
+				TransactionCode = parsedTransaction.TransactionCode,
+				TagId = tag.TagId
 			}).ToList();
 
 			dbProvider.AddTransaction(parsedTransaction);

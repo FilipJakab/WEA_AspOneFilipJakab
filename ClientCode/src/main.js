@@ -1,20 +1,27 @@
 import Vue from "vue"
-import App from "./App.vue"
-
 import Axios from "axios"
 import VueRouter from "vue-router"
 
-import Routes from "./routes"
+import App from "./App.vue"
 
-const router = new VueRouter(Routes)
+import Routes from "./routes"
+import Constants from "./constants"
 
 Vue.use(VueRouter)
 
 Vue.prototype.$http = Axios
 
-new Vue({
+Vue.prototype.$AuthToken =
+	() => window.localStorage.getItem(Constants.authTokenName) || window.sessionStorage.getItem(Constants.authTokenName)
+
+const router = new VueRouter(Routes)
+
+var myVue = new Vue({
   el: "#app",
 	router,
 	http: Axios,
   render: h => h(App)
 })
+
+if (!myVue.$AuthToken)
+	router.replace({name: "login"})

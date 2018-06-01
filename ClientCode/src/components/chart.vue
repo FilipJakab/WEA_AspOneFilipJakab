@@ -11,8 +11,7 @@ export default {
 		height,
 		width,
 		type,
-		data,
-		beginAtZero
+		data
 	],
 	data () {
 		return {
@@ -47,7 +46,7 @@ export default {
 				scales: {
 					yAxes: [{
 						ticks: {
-							beginAtZero: this.beginAtZero
+							beginAtZero: true
 						}
 					}]
 				}

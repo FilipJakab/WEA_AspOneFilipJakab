@@ -29,17 +29,14 @@ export default {
   },
 	computed: {
 		token() {
-			return window.localStorage.getItem(Const.authTokenName)
-				|| window.sessionStorage.getItem(Const.authTokenName)
+			return this.$AuthToken()
 		}
 	},
 	mounted() {
-		M.AutoInit() 
+		M.AutoInit()
 
 		if (!this.token)
 			this.$router.push({name: "login"})
-		else
-			this.$router.push({name: "home"})
 	}
 }
 </script>

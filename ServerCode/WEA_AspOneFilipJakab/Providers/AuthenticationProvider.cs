@@ -7,6 +7,8 @@ using System.Security.Claims;
 using DataProviders;
 using DataProviders.Models;
 using Microsoft.IdentityModel.Tokens;
+using WEA_AspOneFilipJakab.Helpers;
+using WEA_AspOneFilipJakab.Models;
 
 namespace WEA_AspOneFilipJakab.Providers
 {
@@ -33,11 +35,14 @@ namespace WEA_AspOneFilipJakab.Providers
 		/// </summary>
 		/// <param name="email"></param>
 		/// <param name="password"></param>
+		/// <param name="user"></param>
 		/// <returns>JWT token</returns>
-		public Tuple<User, string> Authenticate(string email, string password)
+		public string Authenticate(string email, string password, out UserModel user)
 		{
-			User user = ctx
-				.User.FirstOrDefault(x => string.Equals(x.Email, email, StringComparison.InvariantCultureIgnoreCase) && x.Password == password);
+			user = (new Mapper()).MapUser(ctx
+				.User
+				.FirstOrDefault(x => string.Equals(x.Email, email, StringComparison.InvariantCultureIgnoreCase)
+				                     && x.Password == password));
 
 			if (user == null)
 				throw new UnauthorizedAccessException("Email or Password doesnt match");
@@ -48,7 +53,7 @@ namespace WEA_AspOneFilipJakab.Providers
 			{
 				new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
 				new Claim(ClaimTypes.Email, user.Email),
-				new Claim(ClaimTypes.DateOfBirth, user.Birthdate.ToString(CultureInfo.CurrentCulture)),
+				new Claim(ClaimTypes.DateOfBirth, DateTime.ParseExact(user.Birthdate, "yyyy MMMM dd", CultureInfo.InvariantCulture).ToString(CultureInfo.CurrentCulture)),
 				new Claim(ClaimTypes.Name, $"{user.FirstName} {user.LastName}")
 			};
 
@@ -60,7 +65,7 @@ namespace WEA_AspOneFilipJakab.Providers
 				audience: audience,
 				signingCredentials: new SigningCredentials(issuerKey, SecurityAlgorithms.HmacSha256));
 
-			return new Tuple<User, string>(user, new JwtSecurityTokenHandler().WriteToken(token));
+			return new JwtSecurityTokenHandler().WriteToken(token);
 		}
 	}
 }

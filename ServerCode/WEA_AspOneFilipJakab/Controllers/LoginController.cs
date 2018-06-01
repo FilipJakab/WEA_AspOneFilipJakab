@@ -67,14 +67,12 @@ namespace WEA_AspOneFilipJakab.Controllers
 					options["audience"],
 					new TimeSpan(tokenLifeTime, 0, 0));
 
-				Tuple<User, string> userAndToken = authProvider.Authenticate(model.Email, model.Password);
-
-				Mapper mapper = new Mapper();
+				string token = authProvider.Authenticate(model.Email, model.Password, out UserModel user);
 
 				return new AuthenticatedUserModel
 				{
-					Token = userAndToken.Item2,
-					User = mapper.MapUser(userAndToken.Item1)
+					Token = token,
+					User = user
 				};
 			});
 		}

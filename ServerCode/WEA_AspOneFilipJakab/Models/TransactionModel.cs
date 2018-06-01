@@ -6,15 +6,19 @@ namespace WEA_AspOneFilipJakab.Models
 {
 	public class TransactionModel
 	{
+		public Guid TransactionCode { get; set; }
+
 		public int UserId { get; set; }
 
 		public string Name { get; set; }
 
 		public string Description { get; set; }
 
-		public DateTime Date { get; set; }
+		public string Date { get; set; }
 
-		public List<int> TagIds { get; set; }
+		public List<TransactionCategoryModel> Categories { get; set; }
+
+		public IEnumerable<TagModel> TagModels { get; set; }
 
 		public decimal? Longitude { get; set; }
 

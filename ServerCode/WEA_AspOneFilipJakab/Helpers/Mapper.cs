@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 using DataProviders.Models;
 using WEA_AspOneFilipJakab.Models;
 
@@ -22,10 +25,11 @@ namespace WEA_AspOneFilipJakab.Helpers
 		{
 			return new Transaction
 			{
+				TransactionCode = model.TransactionCode,
 				UserId = model.UserId,
-				CategoryId = model.CategoryId,
-				Date = model.Date,
+				Date = DateTime.ParseExact(model.Date, "yyyy-MM-dd", CultureInfo.InvariantCulture),
 				Description = model.Description,
+				CategoryId = model.CategoryId,
 				Name = model.Name,
 				Latitude = model.Latitude,
 				Longitude = model.Longitude
@@ -36,11 +40,10 @@ namespace WEA_AspOneFilipJakab.Helpers
 		{
 			return new UserModel
 			{
-				Birthdate = user.Birthdate,
+				Birthdate = user.Birthdate.ToString("yyyy MMMM dd"),
 				Email = user.Email,
 				FirstName = user.FirstName,
 				LastName = user.LastName,
-				Password = user.Password,
 				UserId = user.UserId
 			};
 		}
@@ -55,15 +58,27 @@ namespace WEA_AspOneFilipJakab.Helpers
 			};
 		}
 
-		public TransactionModel MapTransaction(Transaction transaction)
+		public Tag ParseTag(TagModel model)
+		{
+			return new Tag
+			{
+				Name = model.Name,
+				TagId = model.TagId,
+				UserId = model.UserId
+			};
+		}
+
+		public TransactionModel MapTransaction(Transaction transaction, IEnumerable<TagModel> tags)
 		{
 			return new TransactionModel
 			{
+				TransactionCode = transaction.TransactionCode,
 				UserId = transaction.UserId,
-				CategoryId = transaction.CategoryId,
-				Date = transaction.Date,
+				Date = transaction.Date.ToString("yyyy MMMM dd"),
 				Description = transaction.Description,
 				Name = transaction.Name,
+				CategoryId = transaction.CategoryId,
+				TagModels = transaction.TransactionTags.Select(x => MapTag(x.Tag)),
 				Latitude = transaction.Latitude,
 				Longitude = transaction.Longitude
 			};

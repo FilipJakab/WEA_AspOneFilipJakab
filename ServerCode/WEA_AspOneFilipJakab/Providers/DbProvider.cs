@@ -2,6 +2,8 @@
 using System.Linq;
 using DataProviders;
 using DataProviders.Models;
+using Microsoft.EntityFrameworkCore;
+using WEA_AspOneFilipJakab.Models;
 
 namespace WEA_AspOneFilipJakab.Providers
 {
@@ -12,6 +14,13 @@ namespace WEA_AspOneFilipJakab.Providers
 		public DbProvider(Filip_WEAAspOneFilipJakabContext ctx)
 		{
 			this.ctx = ctx;
+		}
+
+		public void AddTags(IEnumerable<Tag> tags)
+		{
+			ctx.Tag.AddRange(tags);
+
+			ctx.SaveChanges();
 		}
 
 		public void AddTag(Tag tag)
@@ -45,7 +54,7 @@ namespace WEA_AspOneFilipJakab.Providers
 
 		public List<Transaction> GetTransactions(int userId)
 		{
-			return ctx.Transaction.Where(x => x.UserId == userId).ToList();
+			return ctx.Transaction.Include(x => x.TransactionTags).Where(x => x.UserId == userId).ToList();
 		}
 
 		public List<TransactionCategory> GetCategories()

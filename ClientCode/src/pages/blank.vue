@@ -10,7 +10,14 @@
 
 <script>
 export default {
-
+	mounted() {
+		if (!this.$AuthToken)
+			this.$router.push({name: "login"})
+		else
+			this.$router.push(this.$route.path == "/"
+				? "/home"
+				: this.$route.path)
+	}
 }
 </script>
 

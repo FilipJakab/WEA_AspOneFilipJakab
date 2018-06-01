@@ -6,7 +6,7 @@
 			</router-link>
 			<ul class="right hide-on-med-and-down">
 				<li>
-					<router-link :to="{name:'management', query: {userid: userId}}">Management</router-link>
+					<router-link :to="{name:'management'}">Management</router-link>
 				</li>
 				<li>
 					<router-link :to="{name:'logout'}">Sign out</router-link>
@@ -22,12 +22,6 @@ import Constants from "../constants.js"
 export default {
 	data () {
 		return {
-		}
-	},
-	computed: {
-		userId() {
-			return window.localStorage.getItem(Constants.userIdName)
-			|| window.sessionStorage.getItem(Constants.userIdName)
 		}
 	}
 }

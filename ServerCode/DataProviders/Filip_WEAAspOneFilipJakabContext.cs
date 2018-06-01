@@ -54,7 +54,7 @@ namespace DataProviders
 
 				entity.Property(e => e.Date).HasColumnType("date");
 
-				entity.Property(e => e.Descrpition).HasColumnType("text");
+				entity.Property(e => e.Description).HasColumnType("text");
 
 				entity.Property(e => e.Latitude).HasColumnType("decimal(9, 6)");
 

@@ -44,6 +44,11 @@ export default {
 					component: Logout
 				}
 			]
+		},
+		{
+			path: "/*",
+			name: "EE",
+			redirect: "/home"
 		}
 	]
 }

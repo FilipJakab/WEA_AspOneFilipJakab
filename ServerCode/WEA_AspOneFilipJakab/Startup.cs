@@ -43,7 +43,7 @@ namespace WEA_AspOneFilipJakab
 			services.AddAuthentication(options =>
 			{
 				options.DefaultAuthenticateScheme = options.DefaultChallengeScheme = "JwtBearer";
-			}).AddJwtBearer(options =>
+			}).AddJwtBearer("JwtBearer", options =>
 			{
 				options.TokenValidationParameters = new TokenValidationParameters
 				{
@@ -52,13 +52,13 @@ namespace WEA_AspOneFilipJakab
 						Encoding.UTF8.GetBytes(Configuration.GetSection("SecretKeys")["IssuerSignInKey"])),
 
 					ValidateAudience = true,
-					ValidAudience = authConfig["Audience"] /*"Prestizni Studenti"*/,
+					ValidAudience = authConfig["Audience"],
 
 					ValidateIssuer = true,
-					ValidIssuer = authConfig["Issuer"]/*"Programator"*/,
+					ValidIssuer = authConfig["Issuer"],
 
 					ValidateLifetime = true,
-					ClockSkew = new TimeSpan(0, tokenLifeTimeInHours, 0, 0)
+					ClockSkew = new TimeSpan(0, /*tokenLifeTimeInHours,*/ 5, 0)
 				};
 			});
 
@@ -72,6 +72,8 @@ namespace WEA_AspOneFilipJakab
 			{
 				app.UseDeveloperExceptionPage();
 			}
+
+			app.UseAuthentication();
 
 			app.UseMvc();
 		}
