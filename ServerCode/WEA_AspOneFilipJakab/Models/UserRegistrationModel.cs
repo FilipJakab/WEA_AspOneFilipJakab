@@ -10,6 +10,8 @@ namespace WEA_AspOneFilipJakab.Models
 
 		public string Email { get; set; }
 
+		public decimal Balance { get; set; }
+
 		public DateTime Birthdate { get; set; }
 
 		public string Password { get; set; }

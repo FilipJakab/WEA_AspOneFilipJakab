@@ -17,7 +17,20 @@
 							<span>Remember me</span>
 						</label>
 					</div>
-					<div class="col s4 offset-s2">
+					<div class="col s1 offset-s1">
+						<div class="preloader-wrapper small active" v-show="loading">
+							<div class="spinner-layer spinner-green-only right">
+								<div class="circle-clipper left">
+									<div class="circle"></div>
+								</div><div class="gap-patch">
+									<div class="circle"></div>
+								</div><div class="circle-clipper right">
+									<div class="circle"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col s4">
 						<button class="btn waves-effect waves-light right" style="width: 100%" @click.prevent="onLoginSubmited">
 							Sign in
 						</button>
@@ -35,8 +48,6 @@
 
 <script>
 import AuthProvider from "../providers/authProvider.js"
-import Constants from "../constants.js"
-import constants from '../constants.js';
 
 export default {
 	data () {
@@ -44,35 +55,38 @@ export default {
 			email: "",
 			password: "",
 			rememberMe: false,
-			provider: undefined
+			provider: null,
+			loading: false
 		}
 	},
 	methods: {
 		onLoginSubmited() {
+			this.loading = true
 			this.provider
 			.Login(this.email, this.password)
 			.then((response) => {
 				console.log(response)
 
 				if (response.isOk) {
-					// store token and user id to localStorage (user Constants)
+					// store token and user id to localStorage (user config)
 					if (this.rememberMe) {
-						window.localStorage.setItem(Constants.authTokenName, response.data.token)
-						window.localStorage.setItem(Constants.userIdName, response.data.user.userId)
+						window.localStorage.setItem(config.authTokenName, response.data.token)
+						window.localStorage.setItem(config.userIdName, response.data.user.userId)
 					} else {
-						window.sessionStorage.setItem(Constants.authTokenName, response.data.token)
-						window.sessionStorage.setItem(Constants.userIdName, response.data.user.userId)
+						window.sessionStorage.setItem(config.authTokenName, response.data.token)
+						window.sessionStorage.setItem(config.userIdName, response.data.user.userId)
 					}
 					this.$router.push({name: "home"})
+					// this.$router.push({name: "home"})
 				} else
 					M.toast({html: response.errorMessage})
 			}).catch((err) => {
 				M.toast({html: err})
-			})
+			}).finally(() => this.loading = false)
 		}
 	},
 	mounted() {
-		this.provider = new AuthProvider(this.$http, constants.backendUrl)
+		this.provider = new AuthProvider(this.$http, config.backendUrl)
 	}
 }
 </script>

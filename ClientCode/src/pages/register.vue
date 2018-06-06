@@ -15,6 +15,10 @@
 						<input type="password" id="password" v-model="password[1]" :class="{validate:true,invalid:!isValidPassword}" minlength="4">
 						<label for="password">Password again</label>
 					</div>
+					<div class="input-field col s6 offset-s3">
+						<input type="number" id="balance" v-model="balance" class="validate">
+						<label for="balance">Initial balance</label>
+					</div>
 					<div class="input-field col s12">
 						<label for="birth">
 							Date of birth
@@ -56,6 +60,7 @@ export default {
 	data () {
 		return {
 			email: "",
+			balance: 0,
 			password: ["", ""],
 			firstname: "",
 			lastname: "",
@@ -78,6 +83,7 @@ export default {
 			this.provider.Register(
 				new RegistrationModel(
 					this.email,
+					this.balance,
 					this.password[0],
 					M.Datepicker.getInstance($("#birth")).toString("yyyy-mm-dd"),
 					this.firstname,

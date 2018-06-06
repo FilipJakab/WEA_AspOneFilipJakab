@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Text;
 using DataProviders;
 using DataProviders.Models;
@@ -19,7 +20,7 @@ namespace WEA_AspOneFilipJakab
 		}
 
 		public IConfiguration Configuration { get; }
-
+		
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
@@ -74,7 +75,8 @@ namespace WEA_AspOneFilipJakab
 			}
 
 			app.UseAuthentication();
-
+			app.UseDefaultFiles();
+			app.UseStaticFiles();
 			app.UseMvc();
 		}
 	}

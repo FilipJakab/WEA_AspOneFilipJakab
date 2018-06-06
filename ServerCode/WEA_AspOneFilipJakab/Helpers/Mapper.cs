@@ -15,19 +15,38 @@ namespace WEA_AspOneFilipJakab.Helpers
 			{
 				Birthdate = model.Birthdate,
 				Email = model.Email,
+				Balance = model.Balance,
 				FirstName = model.FirstName,
 				LastName = model.LastName,
 				Password = model.Password
 			};
 		}
 
+		public User ParseUser(UserModel model)
+		{
+			DateTime birthdate = DateTime.ParseExact(model.Birthdate, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+
+			return new User
+			{
+				UserId = model.UserId,
+				Email = model.Email,
+				Balance = model.Balance,
+				Birthdate = birthdate,
+				FirstName = model.FirstName,
+				LastName = model.LastName
+			};
+		}
+
 		public Transaction ParseTransaction(TransactionModel model)
 		{
+			DateTime date = DateTime.ParseExact(model.Date, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+
 			return new Transaction
 			{
 				TransactionCode = model.TransactionCode,
 				UserId = model.UserId,
-				Date = DateTime.ParseExact(model.Date, "yyyy-MM-dd", CultureInfo.InvariantCulture),
+				Date = date,
+				Amount = model.Amount,
 				Description = model.Description,
 				CategoryId = model.CategoryId,
 				Name = model.Name,
@@ -42,6 +61,7 @@ namespace WEA_AspOneFilipJakab.Helpers
 			{
 				Birthdate = user.Birthdate.ToString("yyyy MMMM dd"),
 				Email = user.Email,
+				Balance = user.Balance,
 				FirstName = user.FirstName,
 				LastName = user.LastName,
 				UserId = user.UserId
@@ -68,7 +88,7 @@ namespace WEA_AspOneFilipJakab.Helpers
 			};
 		}
 
-		public TransactionModel MapTransaction(Transaction transaction, IEnumerable<TagModel> tags)
+		public TransactionModel MapTransaction(Transaction transaction, IEnumerable<Tag> tags)
 		{
 			return new TransactionModel
 			{
@@ -76,9 +96,10 @@ namespace WEA_AspOneFilipJakab.Helpers
 				UserId = transaction.UserId,
 				Date = transaction.Date.ToString("yyyy MMMM dd"),
 				Description = transaction.Description,
+				Amount = transaction.Amount,
 				Name = transaction.Name,
 				CategoryId = transaction.CategoryId,
-				TagModels = transaction.TransactionTags.Select(x => MapTag(x.Tag)),
+				TagModels = transaction.TransactionTags.Select(x => MapTag(tags.First(y => y.TagId == x.TagId))),
 				Latitude = transaction.Latitude,
 				Longitude = transaction.Longitude
 			};

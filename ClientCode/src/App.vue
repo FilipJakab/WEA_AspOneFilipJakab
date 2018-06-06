@@ -14,7 +14,6 @@
 </template>
 
 <script>
-import Const from "./constants.js"
 
 import Navigation from "./components/navigation.vue"
 

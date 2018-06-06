@@ -12,18 +12,18 @@ namespace WEA_AspOneFilipJakab.Models
 
 		public string Name { get; set; }
 
+		public int? CategoryId { get; set; }
+
+		public decimal Amount { get; set; }
+
 		public string Description { get; set; }
 
 		public string Date { get; set; }
-
-		public List<TransactionCategoryModel> Categories { get; set; }
 
 		public IEnumerable<TagModel> TagModels { get; set; }
 
 		public decimal? Longitude { get; set; }
 
 		public decimal? Latitude { get; set; }
-
-		public int? CategoryId { get; set; }
 	}
 }

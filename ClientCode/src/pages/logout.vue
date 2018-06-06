@@ -19,14 +19,12 @@
 </template>
 
 <script>
-import Constants from "../constants.js"
-
 export default {
 	mounted() {
-		window.localStorage.removeItem(Constants.authTokenName)
-		window.localStorage.removeItem(Constants.userIdName)
-		window.sessionStorage.removeItem(Constants.authTokenName)
-		window.sessionStorage.removeItem(Constants.userIdName)
+		window.localStorage.removeItem(config.authTokenName)
+		window.localStorage.removeItem(config.userIdName)
+		window.sessionStorage.removeItem(config.authTokenName)
+		window.sessionStorage.removeItem(config.userIdName)
 	}
 }
 </script>

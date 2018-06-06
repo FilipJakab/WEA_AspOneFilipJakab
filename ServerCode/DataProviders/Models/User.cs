@@ -17,6 +17,7 @@ namespace DataProviders.Models
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public DateTime Birthdate { get; set; }
+        public decimal Balance { get; set; }
 
         public ICollection<Tag> Tag { get; set; }
         public ICollection<Transaction> Transaction { get; set; }

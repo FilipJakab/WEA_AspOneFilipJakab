@@ -5,9 +5,7 @@ namespace DataProviders
 {
 	public partial class Filip_WEAAspOneFilipJakabContext : DbContext
 	{
-		public Filip_WEAAspOneFilipJakabContext(DbContextOptions options) : base(options)
-		{
-		}
+		public Filip_WEAAspOneFilipJakabContext(DbContextOptions options) : base(options) { }
 
 		public virtual DbSet<Place> Place { get; set; }
 		public virtual DbSet<Roles> Roles { get; set; }
@@ -30,20 +28,20 @@ namespace DataProviders
 				entity.HasKey(e => e.RoleId);
 
 				entity.Property(e => e.Name)
-									.IsRequired()
-									.HasMaxLength(50);
+						.IsRequired()
+						.HasMaxLength(50);
 			});
 
 			modelBuilder.Entity<Tag>(entity =>
 			{
 				entity.Property(e => e.Name)
-									.IsRequired()
-									.HasMaxLength(50);
+						.IsRequired()
+						.HasMaxLength(50);
 
 				entity.HasOne(d => d.User)
-									.WithMany(p => p.Tag)
-									.HasForeignKey(d => d.UserId)
-									.HasConstraintName("FK_Tag_User");
+						.WithMany(p => p.Tag)
+						.HasForeignKey(d => d.UserId)
+						.HasConstraintName("FK_Tag_User");
 			});
 
 			modelBuilder.Entity<Transaction>(entity =>
@@ -51,6 +49,8 @@ namespace DataProviders
 				entity.HasKey(e => e.TransactionCode);
 
 				entity.Property(e => e.TransactionCode).HasDefaultValueSql("(newid())");
+
+				entity.Property(e => e.Amount).HasColumnType("money");
 
 				entity.Property(e => e.Date).HasColumnType("date");
 
@@ -61,18 +61,19 @@ namespace DataProviders
 				entity.Property(e => e.Longitude).HasColumnType("decimal(9, 6)");
 
 				entity.Property(e => e.Name)
-									.IsRequired()
-									.HasMaxLength(50);
+						.IsRequired()
+						.HasMaxLength(50);
 
 				entity.HasOne(d => d.Category)
-									.WithMany(p => p.Transaction)
-									.HasForeignKey(d => d.CategoryId)
-									.HasConstraintName("FK_Transaction_TransactionCategory");
+						.WithMany(p => p.Transaction)
+						.HasForeignKey(d => d.CategoryId)
+						.OnDelete(DeleteBehavior.Cascade)
+						.HasConstraintName("FK_Transaction_TransactionCategory1");
 
 				entity.HasOne(d => d.User)
-									.WithMany(p => p.Transaction)
-									.HasForeignKey(d => d.UserId)
-									.HasConstraintName("FK_Transaction_User");
+						.WithMany(p => p.Transaction)
+						.HasForeignKey(d => d.UserId)
+						.HasConstraintName("FK_Transaction_User");
 			});
 
 			modelBuilder.Entity<TransactionCategory>(entity =>
@@ -82,43 +83,45 @@ namespace DataProviders
 				entity.ToTable("TransactionCategory", "CONST");
 
 				entity.Property(e => e.Name)
-									.IsRequired()
-									.HasMaxLength(50);
+						.IsRequired()
+						.HasMaxLength(50);
 			});
 
 			modelBuilder.Entity<TransactionTags>(entity =>
 			{
 				entity.HasOne(d => d.Tag)
-									.WithMany(p => p.TransactionTags)
-									.HasForeignKey(d => d.TagId)
-									.OnDelete(DeleteBehavior.ClientSetNull)
-									.HasConstraintName("FK_TransactionTags_Tag");
+						.WithMany(p => p.TransactionTags)
+						.HasForeignKey(d => d.TagId)
+						.OnDelete(DeleteBehavior.ClientSetNull)
+						.HasConstraintName("FK_TransactionTags_Tag");
 
 				entity.HasOne(d => d.TransactionCodeNavigation)
-									.WithMany(p => p.TransactionTags)
-									.HasForeignKey(d => d.TransactionCode)
-									.HasConstraintName("FK_TransactionTags_Transaction1");
+						.WithMany(p => p.TransactionTags)
+						.HasForeignKey(d => d.TransactionCode)
+						.HasConstraintName("FK_TransactionTags_Transaction1");
 			});
 
 			modelBuilder.Entity<User>(entity =>
 			{
+				entity.Property(e => e.Balance).HasColumnType("money");
+
 				entity.Property(e => e.Birthdate).HasColumnType("date");
 
 				entity.Property(e => e.Email)
-									.IsRequired()
-									.HasMaxLength(50);
+						.IsRequired()
+						.HasMaxLength(50);
 
 				entity.Property(e => e.FirstName)
-									.IsRequired()
-									.HasMaxLength(50);
+						.IsRequired()
+						.HasMaxLength(50);
 
 				entity.Property(e => e.LastName)
-									.IsRequired()
-									.HasMaxLength(50);
+						.IsRequired()
+						.HasMaxLength(50);
 
 				entity.Property(e => e.Password)
-									.IsRequired()
-									.HasMaxLength(100);
+						.IsRequired()
+						.HasMaxLength(100);
 			});
 		}
 	}

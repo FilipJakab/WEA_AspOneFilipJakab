@@ -56,6 +56,9 @@ namespace WEA_AspOneFilipJakab.Controllers
 		{
 			return RequestHandlers.Handle(() =>
 			{
+				if (string.IsNullOrEmpty(model.Email) || string.IsNullOrEmpty(model.Password))
+					throw new UnauthorizedAccessException("Email or Password was not filled");
+
 				IConfigurationSection options = config.GetSection("AuthOptions");
 
 				int.TryParse(options["TokenLifeTimeInHours"], out int tokenLifeTime);
